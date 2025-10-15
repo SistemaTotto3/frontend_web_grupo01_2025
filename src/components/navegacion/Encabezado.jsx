@@ -13,7 +13,7 @@ const Encabezado = () => {
   const manejarNavegacion = (ruta) => {
     navigate(ruta);
     setMostrarMenu(false);
-  };
+  };  
 
   return (
     <Navbar expand="md" fixed="top" className="bg-primary">
