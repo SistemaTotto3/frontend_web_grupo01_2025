@@ -1,5 +1,4 @@
-const Catalogo = () => {
-  
+const Catalogo = () => { 
 return (
 <>
 <h2>Página de Catalogo</h2>
