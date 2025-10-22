@@ -3,10 +3,11 @@ import { Container } from "react-bootstrap";
 import TablaInsumos from "../components/insumos/TablaInsumo";
 
 const Insumos = () => {
+
   const [insumos, setinsumos] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  const obtenerProductos = async () => {
+  const obtenerInsumos = async () => {
     try {
       const respuesta = await fetch("http://localhost:3000/api/insumo");
       if (!respuesta.ok) {
@@ -22,7 +23,7 @@ const Insumos = () => {
   };
 
   useEffect(() => {
-    obtenerProductos();
+    obtenerInsumos();
   }, []);
   return (
     <>
@@ -33,4 +34,5 @@ const Insumos = () => {
     </>
   );
 };
+
 export default Insumos;

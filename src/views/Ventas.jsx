@@ -1,8 +1,8 @@
 const Ventas = () => {
-return (
-<>
-<h2>Página de Ventas</h2>
-</>
-);
-}
+  return (
+    <>
+      <h2>Página de Ventas</h2>
+    </>
+  );
+};
 export default Ventas;
