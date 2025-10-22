@@ -31,13 +31,11 @@ const TablaInsumos = ({ insumos, cargando }) => {
             <td>Acción</td>
           </tr>
             );    
-       })}
+        })}
         </tbody>
       </Table>
     </>
   );
 }
-export default TablaInsumos;
 
-
-    
+export default TablaInsumos;  
