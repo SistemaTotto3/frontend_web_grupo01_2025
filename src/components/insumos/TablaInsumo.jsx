@@ -24,7 +24,7 @@ const TablaInsumos = ({ insumos, cargando }) => {
       <tbody>
         {insumos.map((insumo) => {
           return (
-          <tr key={insumo.idInsumo}>
+          <tr key={insumo.id_insumo}>
             <td>{insumo.id_insumo}</td>
             <td>{insumo.fecha_insumo}</td>
             <td>{insumo.total_insumo}</td>
