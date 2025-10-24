@@ -8,19 +8,19 @@ const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  const [categoriasFiltradas, setcategoriasFiltradas] = useState([]);
+  const [categoriasFiltradas, setCategoriasFiltradas] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
 
   const obtenerCategorias = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3002/api/categorias");
+      const respuesta = await fetch("http://localhost:3000/api/categorias");
       if (!respuesta.ok) {
         throw new Error("Error al obtener las categorias");
       }
 
       const datos = await respuesta.json();
       setCategorias(datos);
-      setcategoriasFiltradas(datos);
+      setCategoriasFiltradas(datos);
       setCargando(false);
     } catch (error) {
       console.error(error.message);
@@ -29,13 +29,13 @@ const Categorias = () => {
   };
 
   const manejarCambioBusqueda = (e) => {
-    const texto = e.target.value.toLowercase();
+    const texto = e.target.value.toLowerCase();
     setTextoBusqueda(texto);
     const filtradas = categorias.filter(
       (categoria) =>
-        categoria.nombre_categoria.toLowercase().includes(texto)
+        categoria.nombre_categoria.toLowerCase().includes(texto)
     );
-    setVentasFiltradas(filtradas);
+    setCategoriasFiltradas(filtradas);
   }
 
   useEffect(() => {

@@ -13,7 +13,7 @@ const Ventas = () => {
 
   const obtenerVenta = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3002/api/venta");
+      const respuesta = await fetch("http://localhost:3000/api/venta");
       if (!respuesta.ok) {
         throw new Error("Error al obtener las ventas");
       }
@@ -29,14 +29,15 @@ const Ventas = () => {
   };
 
   const manejarCambioBusqueda = (e) => {
-    const texto = e.target.value.toLowercase();
+    const texto = e.target.value.toLowerCase();
     setTextoBusqueda(texto);
+    
     const filtradas = ventas.filter(
       (venta) =>
         venta.idCliente == texto ||
         venta.fecha_venta == texto ||
         venta.total_venta == texto ||
-        venta.estado_venta.toLowercase().includes(texto)
+        venta.estado_venta.toLowerCase().includes(texto)
     );
     setVentasFiltradas(filtradas);
   }

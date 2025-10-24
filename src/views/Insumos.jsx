@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Col, Row, Button } from "react-bootstrap";
 import TablaInsumos from "../components/insumos/TablaInsumo";
+import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 
 const Insumos = () => {
 
-  const [insumos, setinsumos] = useState([]);
+  const [insumos, setInsumos] = useState([]);
   const [cargando, setCargando] = useState(true);
+
+  const [insumosFiltrados, setInsumosFiltrados] = useState([]);
+  const [textoBusqueda, setTextoBusqueda] = useState("");
 
   const obtenerInsumos = async () => {
     try {
@@ -14,13 +18,29 @@ const Insumos = () => {
         throw new Error("Error al obtener los insumos");
       }
       const datos = await respuesta.json();
-      setinsumos(datos);
+      setInsumos(datos);
+      setInsumosFiltrados(datos);
       setCargando(false);
     } catch (error) {
       console.error(error.message);
       setCargando(false);
     }
   };
+  const manejarCambioBusqueda = (e) => {
+    const texto = e.target.value.toLowerCase();
+    setTextoBusqueda(texto);
+
+    if (texto.trim() === "") {
+    setInsumosFiltrados(insumos);
+    return;
+  }
+    const filtrados = insumos.filter(
+      (insumo) =>
+        insumo.fecha_insumo == texto ||
+      insumo.total_insumo == texto
+    );
+    setInsumosFiltrados(filtrados);
+  }
 
   useEffect(() => {
     obtenerInsumos();
@@ -29,7 +49,20 @@ const Insumos = () => {
     <>
       <Container className="mt-4">
         <h4> Insumos </h4>
-        <TablaInsumos insumos={insumos} cargando={cargando} />
+
+        <Row>
+          <Col lg={5} md={8} sm={8} xs={7}>
+            <CuadroBusquedas
+              textoBusqueda={textoBusqueda}
+              manejarCambioBusqueda={manejarCambioBusqueda}
+            />
+          </Col>
+        </Row>
+
+        <TablaInsumos
+         insumos={insumosFiltrados} 
+         cargando={cargando}
+       />
       </Container>
     </>
   );
