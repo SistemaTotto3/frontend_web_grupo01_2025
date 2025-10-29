@@ -27,7 +27,8 @@ const TablaCliente = ({ clientes, cargando }) => {
         <tbody>
           {clientes.map((cliente) => {
             return(
-              <tr key={cliente.id_cliente}>
+              <tr key={cliente.idCliente}>
+                <td>{cliente.idCliente}</td>
                 <td>{cliente.nombre_1}</td>
                 <td>{cliente.apellido_1}</td>
                 <td>{cliente.direccion_cliente}</td>

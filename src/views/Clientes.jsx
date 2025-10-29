@@ -13,7 +13,7 @@ const Clientes = () => {
 
   const obtenerClientes= async () => {
     try {
-      const respuesta = await fetch("http://localhost:3000/api/cliente");
+      const respuesta = await fetch("http://localhost:3000/api/Clientes");
       if (!respuesta.ok) {
         throw new Error("Error al obtener los clientes");
       }
@@ -61,7 +61,7 @@ const Clientes = () => {
           </Col>
         </Row>
 
-        <TablaClientes
+        <TablaCliente
          clientes={clientesFiltrados} 
          cargando={cargando}
        />
