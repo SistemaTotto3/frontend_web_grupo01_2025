@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Container, Col, Row, Button } from "react-bootstrap";
 import TablaCliente from "../components/clientes/TablaCliente";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
+import ModalRegistroCliente from "../components/clientes/ModalRegistroCliente";
 
 const Clientes = () => {
 
@@ -10,6 +11,47 @@ const Clientes = () => {
 
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
+
+ const [mostrarModal, setMostrarModal] = useState(false);
+  const [nuevoCliente, setNuevoCliente] = useState({
+    nombre_1: '',
+    apellido_1: '',
+    direccion_cliente: '',
+    telefono_cliente: ''
+  });
+
+    const agregarCliente = async () => {
+    if (!nuevoCliente.nombre_1.trim()) return;
+
+    try {
+      const respuesta = await fetch('http://localhost:3000/api/registrarcliente', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoCliente)
+      });
+
+      if (!respuesta.ok) throw new Error('Error al guardar');
+
+      // Limpiar y cerrar el modal
+      setNuevoCliente({
+        nombre_1: '',
+        apellido_1: '',
+        direccion_cliente: '',
+        telefono_cliente: ''
+       });
+
+      setMostrarModal(false);
+      await obtenerClientes(); // Refresca la lista
+    } catch (error) {
+      console.error("Error al agregar cliente:", error);
+      alert("No se pudo guardar la cliente. Revisa la consola.");
+    }
+  };
+
+   const manejarCambioInput = (e) => {
+    const { name, value } = e.target;
+    setNuevoCliente(prev => ({ ...prev, [name]: value }));
+  };
 
   const obtenerClientes= async () => {
     try {
@@ -61,10 +103,29 @@ const Clientes = () => {
           </Col>
         </Row>
 
+            <Col className="text-end">
+          <Button
+            variant="primary"
+            onClick={() => setMostrarModal(true)}
+          >
+            + Nuevo Cliente
+          </Button>
+        </Col>
+
         <TablaCliente
          clientes={clientesFiltrados} 
          cargando={cargando}
        />
+
+       
+         <ModalRegistroCliente
+          mostrarModal={mostrarModal}
+          setMostrarModal={setMostrarModal}
+          nuevoCliente={nuevoCliente}
+          manejarCambioInput={manejarCambioInput}
+          agregarCliente={agregarCliente}
+        />
+        
       </Container>
     </>
   );

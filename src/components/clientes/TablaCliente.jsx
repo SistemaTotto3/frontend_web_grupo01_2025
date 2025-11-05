@@ -1,6 +1,30 @@
+import React, {useState} from "react";
 import { Table, Spinner } from "react-bootstrap";
+import BotonOrden from "../ordenamiento/BotonOrden";
 
 const TablaCliente = ({ clientes, cargando }) => {
+
+  const [orden, setOrden] = useState({ campo: "id_cliente", direccion: "asc" });
+
+  const manejarOrden = (campo) => {
+    setOrden((prev) => ({
+      campo,
+      direccion:
+        prev.campo === campo && prev.direccion === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  const ClientesOrdenados = [...clientes].sort((a, b) => {
+    const valorA = a[orden.campo];
+    const valorB = b[orden.campo];
+
+    if (typeof valorA === "number" && typeof valorB === "number") {
+      return orden.direccion === "asc" ? valorA - valorB : valorB - valorA;
+    }
+
+    const comparacion = String(valorA).localeCompare(String(valorB));
+    return orden.direccion === "asc" ? comparacion : -comparacion;
+  });
   if (cargando) {
     return (
       <>
@@ -16,17 +40,33 @@ const TablaCliente = ({ clientes, cargando }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>ID Cliente</th>
-            <th>Primer nombre</th>
-            <th>Primer apellido</th>
-            <th>Direccion cliente</th>
-            <th>Telefono cliente</th>
+            <BotonOrden campo="id_cliente" orden={orden} manejarOrden={manejarOrden}>
+              ID
+            </BotonOrden>
+
+            <BotonOrden campo="nombre_1" orden={orden} manejarOrden={manejarOrden}>
+              Primer Nombre
+            </BotonOrden>
+
+            <BotonOrden campo="apellido_1" orden={orden} manejarOrden={manejarOrden}>
+              Segundo Nombre
+            </BotonOrden>
+
+            <BotonOrden campo="direccion_cliente" orden={orden} manejarOrden={manejarOrden}>
+              Direccion cliente
+            </BotonOrden>
+
+            <BotonOrden campo="telefono_cliente" orden={orden} manejarOrden={manejarOrden}>
+              Telefono Cliente
+  
+            </BotonOrden>
+
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {clientes.map((cliente) => {
-            return(
+            return (
               <tr key={cliente.idCliente}>
                 <td>{cliente.idCliente}</td>
                 <td>{cliente.nombre_1}</td>
