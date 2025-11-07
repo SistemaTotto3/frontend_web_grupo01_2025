@@ -4,6 +4,7 @@ import TablaInsumos from "../components/insumos/TablaInsumo";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 
 const Insumos = () => {
+ 
 
   const [insumos, setInsumos] = useState([]);
   const [cargando, setCargando] = useState(true);

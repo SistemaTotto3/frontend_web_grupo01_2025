@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Table, Spinner } from "react-bootstrap";
+import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 
 const TablaCliente = ({ clientes, cargando }) => {
@@ -65,7 +65,7 @@ const TablaCliente = ({ clientes, cargando }) => {
           </tr>
         </thead>
         <tbody>
-          {clientes.map((cliente) => {
+          {ClientesOrdenados.map((cliente) => {
             return (
               <tr key={cliente.idCliente}>
                 <td>{cliente.idCliente}</td>
@@ -73,8 +73,28 @@ const TablaCliente = ({ clientes, cargando }) => {
                 <td>{cliente.apellido_1}</td>
                 <td>{cliente.direccion_cliente}</td>
                 <td>{cliente.telefono_cliente}</td>
-                <td>Acciones</td>
-              </tr>
+
+                <td>
+                  <Button
+                    variant="outline-warning"
+                    size="sm"
+                    className="me-2"
+                    onClick={() => abrirModalEdicion(cliente)}
+                  >
+                    <i className="bi bi-pencil"></i>
+                  </Button>
+
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => abrirModalEliminacion(cliente)}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </Button>
+                </td>
+           </tr>
+
+
             );
           })}
         </tbody>
