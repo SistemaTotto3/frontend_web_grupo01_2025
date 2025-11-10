@@ -49,6 +49,13 @@ const Ordenes = () => {
     }
   };
 
+  const manejarCambioInput = (e) => {
+  const { name, value } = e.target;
+  setNuevaOrden((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
 
   const obtenerOrdenes = async () => {
     try {
@@ -190,7 +197,7 @@ const abrirModalEliminacion = (orden) => {
         <ModalEliminacionOrden
           mostrar={mostrarModalEliminar}                
           setMostrar={setMostrarModalEliminar}
-          orden={categoriaAEliminar}           
+          orden={ordenAEliminar}           
           confirmarEliminacion={confirmarEliminacion}
         />
 

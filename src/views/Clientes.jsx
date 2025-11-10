@@ -3,7 +3,6 @@ import { Container, Col, Row, Button } from "react-bootstrap";
 import TablaCliente from "../components/clientes/TablaCliente";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import ModalRegistroCliente from "../components/clientes/ModalRegistroCliente";
-import ModalRegistroCliente from "../components/clientes/ModalRegistroCliente";
 import ModalEdicionCliente from "../components/clientes/ModalEdicionCliente";
 
 const Clientes = () => {

@@ -3,7 +3,7 @@ import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 
 
-const TablaOrdenes = ({ ordenes, cargando, cargando, abrirModalEdicion, abrirModalEliminacion}) => {
+const TablaOrdenes = ({ ordenes, cargando, abrirModalEdicion, abrirModalEliminacion}) => {
 
   const [orden, setOrden] = useState({ campo: "idOrden", direccion: "asc" });
 
