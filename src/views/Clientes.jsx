@@ -182,7 +182,7 @@ const Clientes = () => {
                 <ModalRegistroCliente
           mostrarModal={mostrarModal}
           setMostrarModal={setMostrarModal}
-          nuevaCliente={nuevaCliente}
+          nuevoCliente={nuevoCliente}
           manejarCambioInput={manejarCambioInput}
           agregarCliente={agregarCliente}
         />
