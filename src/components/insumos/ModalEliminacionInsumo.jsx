@@ -1,5 +1,4 @@
-
-import { Modal, Button } from "react-bootstrap";
+ import { Modal, Button } from "react-bootstrap";
 
 const ModalEliminacionInsumo = ({
   mostrar,
@@ -8,33 +7,19 @@ const ModalEliminacionInsumo = ({
   confirmarEliminacion,
 }) => {
   return (
-    <Modal show={mostrar} onHide={() => setMostrar(false)} centered>
+    <Modal show={mostrar} onHide={() => setMostrar(false)}>
       <Modal.Header closeButton>
         <Modal.Title>Confirmar Eliminación</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>
-          ¿Estás seguro de que deseas eliminar al insumo{" "}
-          <strong>
-            {insumo?.total_insumo}
-          </strong>?
-        </p>
-        <p className="text-muted small">
-          Esta acción no se puede deshacer.
-        </p>
+        ¿Estás seguro de eliminar el insumo #{insumo?.id_insumo}?
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => setMostrar(false)}>
-          Cancelar
-        </Button>
-        <Button variant="danger" onClick={confirmarEliminacion}>
-          Eliminar
-        </Button>
+        <Button variant="secondary" onClick={() => setMostrar(false)}>Cancelar</Button>
+        <Button variant="danger" onClick={confirmarEliminacion}>Eliminar</Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
 export default ModalEliminacionInsumo;
-
-
