@@ -1,8 +1,18 @@
 import React, { useState } from "react";
-import { Table, Spinner } from "react-bootstrap";
+import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
+import Paginacion from "../ordenamiento/Paginacion";
 
-const TablaProducto = ({ productos = [], cargando }) => {
+const TablaProducto = ({
+  productos = [],
+  cargando,
+  abrirModalEdicion,
+  abrirModalEliminacion,
+  totalElementos,
+  elementosPorPagina,
+  paginaActual,
+  establecerPaginaActual,
+}) => {
   const [orden, setOrden] = useState({ campo: "id_producto", direccion: "asc" });
 
   const manejarOrden = (campo) => {
@@ -78,7 +88,25 @@ const TablaProducto = ({ productos = [], cargando }) => {
                 <td>{prod.precio_costo}</td>
                 <td>{prod.precio_venta}</td>
                 <td>{prod.existencia}</td>
-                <td>Acciones</td>
+                <td>
+                  <Button
+                    variant="outline-warning"
+                    size="sm"
+                    className="me-2"
+                    onClick={() => abrirModalEdicion(prod)}
+                    aria-label={`Editar producto ${prod.id_producto}`}
+                  >
+                    <i className="bi bi-pencil"></i>
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => abrirModalEliminacion(prod)}
+                    aria-label={`Eliminar producto ${prod.id_producto}`}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </Button>
+                </td>
               </tr>
             ))
           ) : (
@@ -90,6 +118,12 @@ const TablaProducto = ({ productos = [], cargando }) => {
           )}
         </tbody>
       </Table>
+      <Paginacion
+        elementosPorPagina={elementosPorPagina}
+        totalElementos={totalElementos}
+        paginaActual={paginaActual}
+        establecerPaginaActual={establecerPaginaActual}
+      />
     </>
   );
 };

@@ -45,7 +45,7 @@ const Categorias = () => {
     if (!nuevaCategoria.nombre_categoria.trim()) return;
 
     try {
-      const respuesta = await fetch("http://localhost:3002/api/resgistrarcategoria", {
+      const respuesta = await fetch("http://localhost:3000/api/resgistrarcategoria", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(nuevaCategoria),
@@ -93,7 +93,7 @@ const Categorias = () => {
       tableWidth: 'auto',
       pageBreak: 'auto',
       rowPageBreak: 'auto',
-      didDrawPage: function (data) {
+      didDrawPage: function () {
         const alturaPagina = doc.internal.pageSize.getHeight();
         const anchoPagina = doc.internal.pageSize.getWidth();
 
@@ -121,7 +121,7 @@ const Categorias = () => {
   // 🔹 Obtener todas las categorías
   const obtenerCategorias = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3002/api/Categorias");
+      const respuesta = await fetch("http://localhost:3000/api/Categorias");
       if (!respuesta.ok) {
         throw new Error("Error al obtener las categorías");
       }
@@ -155,7 +155,7 @@ const Categorias = () => {
 
     try {
       const respuesta = await fetch(
-        `http://localhost:3002/api/actualizarCategoria/${categoriaEditada.id_categoria}`,
+        `http://localhost:3000/api/actualizarCategoria/${categoriaEditada.id_categoria}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -183,7 +183,7 @@ const Categorias = () => {
   const confirmarEliminacion = async () => {
     try {
       const respuesta = await fetch(
-        `http://localhost:3002/api/eliminarCategoria/${categoriaAEliminar.id_categoria}`,
+        `http://localhost:3000/api/eliminarCategoria/${categoriaAEliminar.id_categoria}`,
         {
           method: "DELETE",
         }
