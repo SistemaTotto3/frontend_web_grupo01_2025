@@ -172,13 +172,13 @@ const abrirModalEliminacion = (orden) => {
 
 
         <TablaOrdenes
-         ordenes={ordenesFiltrados} 
-         cargando={cargando}
-         abrirModalEdicion={abrirModalEdicion}
-         abrirModalEliminacion={abrirModalEliminacion}
-       />
+          ordenes={ordenesFiltrados} 
+          cargando={cargando}
+          abrirModalEdicion={abrirModalEdicion}
+          abrirModalEliminacion={abrirModalEliminacion}
+        />
 
-       <ModalRegistroOrden
+        <ModalRegistroOrden
           mostrarModal={mostrarModal}
           setMostrarModal={setMostrarModal}
           nuevaOrden={nuevaOrden}

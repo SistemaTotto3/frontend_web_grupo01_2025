@@ -8,17 +8,18 @@ const ModalRegistroCliente = ({
   agregarCliente,
 }) => {
   return (
-    <Modal backdrop='static'
-     show={mostrarModal} onHide={() => setMostrarModal(false)} 
-     centered
-     >
+    <Modal
+      backdrop="static"
+      show={mostrarModal}
+      onHide={() => setMostrarModal(false)}
+      centered
+    >
       <Modal.Header closeButton>
         <Modal.Title>Agregar Nuevo Cliente</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <Form>
-
           <Form.Group className="mb-3" controlId="nombre_1">
             <Form.Label>Primer Nombre</Form.Label>
             <Form.Control
@@ -33,7 +34,7 @@ const ModalRegistroCliente = ({
             />
           </Form.Group>
 
-    <Form.Group className="mb-3" controlId="apellido_1">
+          <Form.Group className="mb-3" controlId="apellido_1">
             <Form.Label>Primer apellido </Form.Label>
             <Form.Control
               type="text"
@@ -47,12 +48,12 @@ const ModalRegistroCliente = ({
             />
           </Form.Group>
 
-              <Form.Group className="mb-3" controlId="direccion_cliente">
+          <Form.Group className="mb-3" controlId="direccion_cliente">
             <Form.Label>direccion cliente </Form.Label>
             <Form.Control
               type="text"
               name="direccion_cliente"
-              value={ nuevoCliente.direccion_cliente}
+              value={nuevoCliente.direccion_cliente}
               onChange={manejarCambioInput}
               placeholder="Ej: Por alla"
               maxLength={20}
@@ -61,12 +62,12 @@ const ModalRegistroCliente = ({
             />
           </Form.Group>
 
-              <Form.Group className="mb-3" controlId="telefono_cliente">
+          <Form.Group className="mb-3" controlId="telefono_cliente">
             <Form.Label>telefono cliente </Form.Label>
             <Form.Control
               type="text"
               name="telefono_cliente"
-              value={ nuevoCliente.telefono_cliente}
+              value={nuevoCliente.telefono_cliente}
               onChange={manejarCambioInput}
               placeholder="Ej: 2545874"
               maxLength={20}
@@ -74,7 +75,6 @@ const ModalRegistroCliente = ({
               autoFocus
             />
           </Form.Group>
-
         </Form>
       </Modal.Body>
 

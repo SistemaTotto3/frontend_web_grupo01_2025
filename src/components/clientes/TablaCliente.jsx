@@ -1,9 +1,8 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 
 const TablaCliente = ({ clientes, cargando }) => {
-
   const [orden, setOrden] = useState({ campo: "id_cliente", direccion: "asc" });
 
   const manejarOrden = (campo) => {
@@ -40,25 +39,44 @@ const TablaCliente = ({ clientes, cargando }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <BotonOrden campo="id_cliente" orden={orden} manejarOrden={manejarOrden}>
+            <BotonOrden
+              campo="id_cliente"
+              orden={orden}
+              manejarOrden={manejarOrden}
+            >
               ID
             </BotonOrden>
 
-            <BotonOrden campo="nombre_1" orden={orden} manejarOrden={manejarOrden}>
+            <BotonOrden
+              campo="nombre_1"
+              orden={orden}
+              manejarOrden={manejarOrden}
+            >
               Primer Nombre
             </BotonOrden>
 
-            <BotonOrden campo="apellido_1" orden={orden} manejarOrden={manejarOrden}>
+            <BotonOrden
+              campo="apellido_1"
+              orden={orden}
+              manejarOrden={manejarOrden}
+            >
               Segundo Nombre
             </BotonOrden>
 
-            <BotonOrden campo="direccion_cliente" orden={orden} manejarOrden={manejarOrden}>
+            <BotonOrden
+              campo="direccion_cliente"
+              orden={orden}
+              manejarOrden={manejarOrden}
+            >
               Direccion cliente
             </BotonOrden>
 
-            <BotonOrden campo="telefono_cliente" orden={orden} manejarOrden={manejarOrden}>
+            <BotonOrden
+              campo="telefono_cliente"
+              orden={orden}
+              manejarOrden={manejarOrden}
+            >
               Telefono Cliente
-  
             </BotonOrden>
 
             <th>Acciones</th>
@@ -92,9 +110,7 @@ const TablaCliente = ({ clientes, cargando }) => {
                     <i className="bi bi-trash"></i>
                   </Button>
                 </td>
-           </tr>
-
-
+              </tr>
             );
           })}
         </tbody>

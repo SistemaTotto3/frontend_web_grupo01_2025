@@ -6,44 +6,43 @@ import ModalRegistroCliente from "../components/clientes/ModalRegistroCliente";
 import ModalEdicionCliente from "../components/clientes/ModalEdicionCliente";
 
 const Clientes = () => {
-
   const [clientes, setClientes] = useState([]);
   const [cargando, setCargando] = useState(true);
 
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
 
-    const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
+  const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
   const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
 
   const [clienteEditada, setClienteEditada] = useState(null);
   const [clienteAEliminar, setClienteAEliminar] = useState(null);
 
- const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevoCliente, setNuevoCliente] = useState({
-    nombre_1: '',
-    apellido_1: '',
-    direccion_cliente: '',
-    telefono_cliente: ''
+    nombre_1: "",
+    apellido_1: "",
+    direccion_cliente: "",
+    telefono_cliente: "",
   });
- const abrirModalEdicion = (cliente) => {
+  const abrirModalEdicion = (cliente) => {
     setClienteEditada({ ...cliente });
     setMostrarModalEdicion(true);
   };
-   const guardarEdicion = async () => {
+  const guardarEdicion = async () => {
     if (!clienteEditada.nombre_1.trim()) return;
 
     try {
       const respuesta = await fetch(
         `http://localhost:3002/api/actualizarclientepatch/${clienteEditada.id_cliente}`,
         {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(clienteEditada),
         }
       );
 
-      if (!respuesta.ok) throw new Error('Error al actualizar');
+      if (!respuesta.ok) throw new Error("Error al actualizar");
 
       setMostrarModalEdicion(false);
       await obtenerClientes();
@@ -53,7 +52,6 @@ const Clientes = () => {
     }
   };
 
-  
   const abrirModalEliminacion = (cliente) => {
     setClienteAEliminar(categoria);
     setMostrarModalEliminar(true);
@@ -64,11 +62,11 @@ const Clientes = () => {
       const respuesta = await fetch(
         `http://localhost:3000/api/eliminarcliente/${clienteAEliminar.id_cliente}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
         }
       );
 
-      if (!respuesta.ok) throw new Error('Error al eliminar');
+      if (!respuesta.ok) throw new Error("Error al eliminar");
 
       setMostrarModalEliminar(false);
       setClienteAEliminar(null);
@@ -79,26 +77,28 @@ const Clientes = () => {
     }
   };
 
-
-    const agregarCliente = async () => {
+  const agregarCliente = async () => {
     if (!nuevoCliente.nombre_1.trim()) return;
 
     try {
-      const respuesta = await fetch('http://localhost:3000/api/registrarcliente', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nuevoCliente)
-      });
+      const respuesta = await fetch(
+        "http://localhost:3000/api/registrarcliente",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevoCliente),
+        }
+      );
 
-      if (!respuesta.ok) throw new Error('Error al guardar');
+      if (!respuesta.ok) throw new Error("Error al guardar");
 
       // Limpiar y cerrar el modal
       setNuevoCliente({
-        nombre_1: '',
-        apellido_1: '',
-        direccion_cliente: '',
-        telefono_cliente: ''
-       });
+        nombre_1: "",
+        apellido_1: "",
+        direccion_cliente: "",
+        telefono_cliente: "",
+      });
 
       setMostrarModal(false);
       await obtenerClientes(); // Refresca la lista
@@ -108,12 +108,12 @@ const Clientes = () => {
     }
   };
 
-   const manejarCambioInput = (e) => {
+  const manejarCambioInput = (e) => {
     const { name, value } = e.target;
-    setNuevoCliente(prev => ({ ...prev, [name]: value }));
+    setNuevoCliente((prev) => ({ ...prev, [name]: value }));
   };
 
-  const obtenerClientes= async () => {
+  const obtenerClientes = async () => {
     try {
       const respuesta = await fetch("http://localhost:3000/api/Clientes");
       if (!respuesta.ok) {
@@ -133,18 +133,18 @@ const Clientes = () => {
     setTextoBusqueda(texto);
 
     if (texto.trim() === "") {
-    setClientesFiltrados(clientes);
-    return;
-  }
+      setClientesFiltrados(clientes);
+      return;
+    }
     const filtrados = clientes.filter(
       (cliente) =>
         cliente.nombre_1.toLowerCase().includes(texto) ||
-         cliente.apellido_1.toLowerCase().includes(texto) ||
-         cliente.direccion_cliente.toLowerCase().includes(texto) ||
-         cliente.telefono_cliente.toLowerCase().includes(texto) 
+        cliente.apellido_1.toLowerCase().includes(texto) ||
+        cliente.direccion_cliente.toLowerCase().includes(texto) ||
+        cliente.telefono_cliente.toLowerCase().includes(texto)
     );
     setClientesFiltrados(filtrados);
-  }
+  };
 
   useEffect(() => {
     obtenerClientes();
@@ -163,11 +163,8 @@ const Clientes = () => {
           </Col>
         </Row>
 
-            <Col className="text-end">
-          <Button
-            variant="primary"
-            onClick={() => setMostrarModal(true)}
-          >
+        <Col className="text-end">
+          <Button variant="primary" onClick={() => setMostrarModal(true)}>
             + Nuevo Cliente
           </Button>
         </Col>
@@ -179,7 +176,7 @@ const Clientes = () => {
           abrirModalEliminacion={abrirModalEliminacion}
         />
 
-                <ModalRegistroCliente
+        <ModalRegistroCliente
           mostrarModal={mostrarModal}
           setMostrarModal={setMostrarModal}
           nuevoCliente={nuevoCliente}
@@ -187,7 +184,7 @@ const Clientes = () => {
           agregarCliente={agregarCliente}
         />
 
-                <ModalEdicionCliente
+        <ModalEdicionCliente
           mostrar={mostrarModalEdicion}
           setMostrar={setMostrarModalEdicion}
           clienteEditada={clienteEditada}
@@ -195,19 +192,16 @@ const Clientes = () => {
           guardarEdicion={guardarEdicion}
         />
 
-       
-         <ModalRegistroCliente
+        <ModalRegistroCliente
           mostrarModal={mostrarModal}
           setMostrarModal={setMostrarModal}
           nuevoCliente={nuevoCliente}
           manejarCambioInput={manejarCambioInput}
           agregarCliente={agregarCliente}
         />
-        
       </Container>
     </>
   );
 };
 
 export default Clientes;
-

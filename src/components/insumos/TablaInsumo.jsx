@@ -1,11 +1,17 @@
-import { Table, Button, Pagination, Spinner } from 'react-bootstrap';
-import { useState } from 'react';
-import BotonOrden from '../ordenamiento/BotonOrden';
+import { Table, Button, Pagination, Spinner } from "react-bootstrap";
+import { useState } from "react";
+import BotonOrden from "../ordenamiento/BotonOrden";
 
 const TablaInsumo = ({
-  insumos, cargando, obtenerDetalles, abrirModalEdicion,
-  abrirModalEliminacion, totalElementos, elementosPorPagina,
-  paginaActual, establecerPaginaActual
+  insumos,
+  cargando,
+  obtenerDetalles,
+  abrirModalEdicion,
+  abrirModalEliminacion,
+  totalElementos,
+  elementosPorPagina,
+  paginaActual,
+  establecerPaginaActual,
 }) => {
   if (cargando) return <div className="text-center">Cargando insumos...</div>;
 
@@ -54,22 +60,22 @@ const TablaInsumo = ({
               orden={orden}
               manejarOrden={manejarOrden}
             >
-            ID
+              ID
             </BotonOrden>
             <BotonOrden
               campo="fecha_insumo"
               orden={orden}
               manejarOrden={manejarOrden}
             >
-            Fecha Insumo
+              Fecha Insumo
             </BotonOrden>
             <BotonOrden
               campo="total_insumo"
               orden={orden}
               manejarOrden={manejarOrden}
-            > 
-            Total Insumo
-           </BotonOrden>
+            >
+              Total Insumo
+            </BotonOrden>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -77,26 +83,34 @@ const TablaInsumo = ({
           {insumosOrdenados.map((ins) => (
             <tr key={ins.id_insumo}>
               <td>{ins.id_insumo}</td>
-              <td>{new Date(ins.fecha_insumo).toLocaleDateString('es-NI', { timeZone: 'America/Managua' })}</td>
+              <td>
+                {new Date(ins.fecha_insumo).toLocaleDateString("es-NI", {
+                  timeZone: "America/Managua",
+                })}
+              </td>
               <td>C$ {parseFloat(ins.total_insumo).toFixed(2)}</td>
               <td>
-                <Button size="sm" variant="outline-info" onClick={() => obtenerDetalles(ins.id_insumo)}>
+                <Button
+                  size="sm"
+                  variant="outline-info"
+                  onClick={() => obtenerDetalles(ins.id_insumo)}
+                >
                   Detalles
-                </Button>{' '}
+                </Button>{" "}
                 <Button
                   variant="outline-warning"
                   size="sm"
                   className="me-2"
                   onClick={() => abrirModalEdicion(ins)}
                 >
-                   <i className="bi bi-pencil"></i> 
+                  <i className="bi bi-pencil"></i>
                 </Button>
                 <Button
                   variant="outline-danger"
                   size="sm"
                   onClick={() => abrirModalEliminacion(ins)}
                 >
-                  <i className="bi bi-trash"></i> 
+                  <i className="bi bi-trash"></i>
                 </Button>
               </td>
             </tr>
