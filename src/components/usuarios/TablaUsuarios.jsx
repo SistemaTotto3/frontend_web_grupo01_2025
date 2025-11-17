@@ -1,8 +1,18 @@
 import React, { useState } from "react";
-import { Table, Spinner } from "react-bootstrap";
+import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
+import Paginacion from "../ordenamiento/Paginacion";
 
-const TablaUsuario = ({ usuarios = [], cargando }) => {
+const TablaUsuario = ({
+  usuarios = [],
+  cargando,
+  abrirModalEdicion,
+  abrirModalEliminacion,
+  totalElementos,
+  elementosPorPagina,
+  paginaActual,
+  establecerPaginaActual,
+}) => {
   const [orden, setOrden] = useState({ campo: "id_usuario", direccion: "asc" });
 
   const manejarOrden = (campo) => {
@@ -35,7 +45,8 @@ const TablaUsuario = ({ usuarios = [], cargando }) => {
   }
 
   return (
-    <Table striped bordered hover>
+    <>
+      <Table striped bordered hover>
       <thead>
         <tr>
           <BotonOrden campo="id_usuario" orden={orden} manejarOrden={manejarOrden}>
@@ -46,17 +57,17 @@ const TablaUsuario = ({ usuarios = [], cargando }) => {
             Nombre Usuario
           </BotonOrden>
 
-          <BotonOrden campo="contraseñá" orden={orden} manejarOrden={manejarOrden}>
-            Contraseñá
+          <BotonOrden campo="contraseña_hash" orden={orden} manejarOrden={manejarOrden}>
+            Contraseña (hash)
           </BotonOrden>
 
           <BotonOrden campo="rol" orden={orden} manejarOrden={manejarOrden}>
             Rol
           </BotonOrden>
 
-
           <th>Acciones</th>
         </tr>
+
       </thead>
       <tbody>
         {usuariosOrdenados.length > 0 ? (
@@ -66,18 +77,43 @@ const TablaUsuario = ({ usuarios = [], cargando }) => {
               <td>{usuario.nombre_usuario}</td>
               <td>{usuario.contraseña_hash}</td>
               <td>{usuario.rol}</td>
-              <td>Acciones</td>
+              <td>
+                <Button
+                  variant="outline-warning"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => abrirModalEdicion(usuario)}
+                  aria-label={`Editar usuario ${usuario.id_usuario}`}
+                >
+                  <i className="bi bi-pencil"></i>
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={() => abrirModalEliminacion(usuario)}
+                  aria-label={`Eliminar usuario ${usuario.id_usuario}`}
+                >
+                  <i className="bi bi-trash"></i>
+                </Button>
+              </td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan={6} className="text-center">
+            <td colSpan={5} className="text-center">
               No hay usuarios
             </td>
           </tr>
         )}
       </tbody>
-    </Table>
+      </Table>
+      <Paginacion
+        elementosPorPagina={elementosPorPagina}
+        totalElementos={totalElementos}
+        paginaActual={paginaActual}
+        establecerPaginaActual={establecerPaginaActual}
+      />
+    </>
   );
 };
 
