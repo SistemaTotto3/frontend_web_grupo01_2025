@@ -35,7 +35,8 @@ const Clientes = () => {
 
     try {
       const respuesta = await fetch(
-        `http://localhost:3000/api/actualizarClientepatch/${clienteEditada.id_cliente}`,
+        `http://localhost:3000/api/actualizarClientepatch/${clienteEditada.idCliente
+}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
