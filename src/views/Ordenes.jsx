@@ -5,6 +5,9 @@ import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import ModalRegistroOrden from "../components/ordenes/ModalRegistroOrden";
 import ModalEdicionOrden from "../components/ordenes/ModalEdicionOrden";
 import ModalEliminacionOrden from "../components/ordenes/ModalEliminacionOrden";
+import ModalDetalleOrden from "../components/ordenes/ModalDetalleOrden";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const Ordenes = () => {
 
@@ -25,6 +28,82 @@ const Ordenes = () => {
     id_venta: '',
     fecha_orden: ''
   });
+
+  const [paginaActual, setPaginaActual] = useState(1);
+  const elementosPorPagina = 5;
+
+  const generarPDFOrdenes = () => {
+      const doc = new jsPDF();
+  
+      // Encabezado del PDF
+      doc.setFillColor(28, 41, 51);
+      doc.rect(0, 0, 220, 30, "F");
+  
+      // Texto centrado (Título)
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(28);
+      doc.text("Lista de Ordenes", doc.internal.pageSize.getWidth() / 2, 20, {
+        align: "center",
+      });
+  
+      // Columnas (solo las que existen)
+      const columnas = ["ID Orden", "ID Venta", "Fecha Orden"];
+  
+      //  Filas (mapeadas desde tu lista de insumos)
+      const filas = ordenesFiltrados.map((orden) => [
+        orden.idOrden,
+        orden.id_venta,
+        orden.fecha_orden,
+      ]);
+  
+      // Marcador de total de páginas
+      const totalPaginas = "{total_pages_count_string}";
+  
+      // Generación de la tabla
+      autoTable(doc, {
+        head: [columnas],
+        body: filas,
+        startY: 40,
+        theme: "grid",
+        styles: { fontSize: 10, cellPadding: 2 },
+        margin: { top: 20, left: 14, right: 14 },
+        tableWidth: "auto",
+        columnStyles: {
+          0: { cellWidth: "auto" },
+          1: { cellWidth: "auto" },
+          2: { cellWidth: "auto" },
+        },
+        pageBreak: "auto",
+        rowPageBreak: "auto",
+  
+        didDrawPage: function () {
+          const alturaPagina = doc.internal.pageSize.getHeight();
+          const anchoPagina = doc.internal.pageSize.getWidth();
+          const numeroPagina = doc.internal.getNumberOfPages();
+  
+          doc.setFontSize(10);
+          doc.setTextColor(0, 0, 0);
+          const piePagina = `Página ${numeroPagina} de ${totalPaginas}`;
+          doc.text(piePagina, anchoPagina / 2, alturaPagina - 10, {
+            align: "center",
+          });
+        },
+      });
+  
+      //  Actualizar el total real de páginas
+      if (typeof doc.putTotalPages === "function") {
+        doc.putTotalPages(totalPaginas);
+      }
+  
+      // Guardar el PDF con nombre y fecha actual
+      const fecha = new Date();
+      const dia = String(fecha.getDate()).padStart(2, "0");
+      const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+      const anio = fecha.getFullYear();
+      const nombreArchivo = `Ordenes_${dia}${mes}${anio}.pdf`;
+  
+      doc.save(nombreArchivo);
+    };
 
   const agregarOrden = async () => {
     if (!nuevaOrden.id_venta.trim()) return;
@@ -151,25 +230,23 @@ const abrirModalEliminacion = (orden) => {
     <>
       <Container className="mt-4">
         <h4> Ordenes </h4>
-
         <Row>
-          <Col lg={5} md={8} sm={8} xs={7}>
+          
+          <Col lg={5} md={6} sm={8} xs={12} className="mb-3">
             <CuadroBusquedas
               textoBusqueda={textoBusqueda}
               manejarCambioBusqueda={manejarCambioBusqueda}
             />
           </Col>
+          <Col className="text-end">
+  <Button
+    className="btn btn-secondary"
+    onClick={() => setMostrarModal(true)}
+  >
+    + Nueva Orden
+  </Button>
+</Col>  
         </Row>
-
-        <Col className="text-end">
-          <Button
-            className='color-boton-registro'
-            onClick={() => setMostrarModal(true)}
-          >
-            + Nueva Categoría
-          </Button>
-        </Col>
-
 
         <TablaOrdenes
           ordenes={ordenesFiltrados} 
