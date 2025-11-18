@@ -371,7 +371,7 @@ const Insumos = () => {
           </Col>
           <Col className="text-end">
             <Button
-              className="color-boton-registro"
+              className="btn btn-secondary"
               onClick={() => setMostrarModalRegistro(true)}
             >
               + Nuevo Insumo
