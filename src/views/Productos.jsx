@@ -253,6 +253,16 @@ const Productos = () => {
             + Nuevo Producto
           </Button>
         </Col>
+        <Col lg={3} md={4} sm={4} xs={5}>
+          <Button
+            className="mb-3"
+            onClick={generarPDFProductos}
+            variant="secondary"
+            style={{ width: "100%" }}
+          >
+            Generar PDF
+          </Button>
+        </Col>
 
         <TablaProducto
           productos={productosPaginados}
@@ -290,16 +300,7 @@ const Productos = () => {
           confirmarEliminacion={confirmarEliminacion}
         />
         </Container>
-        <Col lg={3} md={4} sm={4} xs={5}>
-          <Button
-            className="mb-3"
-            onClick={generarPDFProductos}
-            variant="secondary"
-            style={{ width: "100%" }}
-          >
-            Generar PDF
-          </Button>
-        </Col>
+        
     </>
   );
 };

@@ -377,6 +377,16 @@ const Insumos = () => {
               + Nuevo Insumo
             </Button>
           </Col>
+          <Col lg={3} md={4} sm={4} xs={5}>
+            <Button
+              className="mb-3"
+              onClick={generarPDFInsumos}
+              variant="secondary"
+              style={{ width: "100%" }}
+            >
+              Generar reporte PDF
+            </Button>
+          </Col>
         </Row>
 
         <TablaInsumo
@@ -428,16 +438,7 @@ const Insumos = () => {
           detalles={detallesInsumo}
         />
       </Container>
-      <Col lg={3} md={4} sm={4} xs={5}>
-        <Button
-          className="mb-3"
-          onClick={generarPDFInsumos}
-          variant="secondary"
-          style={{ width: "100%" }}
-        >
-          Generar reporte PDF
-        </Button>
-      </Col>
+      
     </>
   );
 };

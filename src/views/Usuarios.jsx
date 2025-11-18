@@ -235,6 +235,11 @@ const Usuarios = () => {
           + Nuevo Usuario
         </Button>
       </Col>
+      <Col lg={3} md={4} sm={4} xs={5}>
+        <Button className="mb-3" onClick={generarPDFUsuarios} variant="secondary" style={{ width: "100%" }}>
+          Generar PDF
+        </Button>
+      </Col>
 
       <TablaUsuarios
         usuarios={usuariosPaginados}
@@ -272,11 +277,7 @@ const Usuarios = () => {
         confirmarEliminacion={confirmarEliminacion}
       />
       </Container>
-      <Col lg={3} md={4} sm={4} xs={5}>
-        <Button className="mb-3" onClick={generarPDFUsuarios} variant="secondary" style={{ width: "100%" }}>
-          Generar PDF
-        </Button>
-      </Col>
+      
     </>
   );
 };

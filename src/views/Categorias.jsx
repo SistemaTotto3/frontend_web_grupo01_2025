@@ -230,6 +230,16 @@ const Categorias = () => {
             + Nueva Categoría
           </Button>
         </Col>
+         <Col lg={3} md={4} sm={4} xs={5} >
+        <Button
+          className="mb-3"
+          onClick={generarPDFCategorias}
+          variant="secondary"
+          style={{ width: '100%' }}
+        >
+          Generar PDF
+        </Button>
+      </Col>
       </Row>
 
       <TablaCategorias
@@ -273,16 +283,7 @@ const Categorias = () => {
 
       
     </Container>
-    <Col lg={3} md={4} sm={4} xs={5} >
-        <Button
-          className="mb-3"
-          onClick={generarPDFCategorias}
-          variant="secondary"
-          style={{ width: '100%' }}
-        >
-          Generar PDF
-        </Button>
-      </Col>
+   
     </>
   );
 };
