@@ -4,6 +4,7 @@ import TablaCliente from "../components/clientes/TablaCliente";
 import CuadroBusquedas from "../components/busquedas/CuadroBusquedas";
 import ModalRegistroCliente from "../components/clientes/ModalRegistroCliente";
 import ModalEdicionCliente from "../components/clientes/ModalEdicionCliente";
+import ModalEliminacionCliente from "../components/clientes/ModalEliminacionCliente";
 
 const Clientes = () => {
   const [clientes, setClientes] = useState([]);
@@ -34,7 +35,7 @@ const Clientes = () => {
 
     try {
       const respuesta = await fetch(
-        `http://localhost:3002/api/actualizarclientepatch/${clienteEditada.id_cliente}`,
+        `http://localhost:3000/api/actualizarClientepatch/${clienteEditada.id_cliente}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -52,15 +53,16 @@ const Clientes = () => {
     }
   };
 
-  const abrirModalEliminacion = (cliente) => {
-    setClienteAEliminar(categoria);
-    setMostrarModalEliminar(true);
-  };
+const abrirModalEliminacion = (cliente) => {
+  setClienteAEliminar(cliente);
+  setMostrarModalEliminar(true);
+};
+
 
   const confirmarEliminacion = async () => {
     try {
       const respuesta = await fetch(
-        `http://localhost:3000/api/eliminarcliente/${clienteAEliminar.id_cliente}`,
+       `http://localhost:3000/api/eliminarCliente/${clienteAEliminar.idCliente}`,
         {
           method: "DELETE",
         }
@@ -82,7 +84,7 @@ const Clientes = () => {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/api/registrarcliente",
+        "http://localhost:3000/api/registrarCliente",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -192,13 +194,12 @@ const Clientes = () => {
           guardarEdicion={guardarEdicion}
         />
 
-        <ModalRegistroCliente
-          mostrarModal={mostrarModal}
-          setMostrarModal={setMostrarModal}
-          nuevoCliente={nuevoCliente}
-          manejarCambioInput={manejarCambioInput}
-          agregarCliente={agregarCliente}
-        />
+      <ModalEliminacionCliente
+        mostrar={mostrarModalEliminar}
+        setMostrar={setMostrarModalEliminar}
+        cliente={clienteAEliminar}
+        confirmarEliminacion={confirmarEliminacion}
+      />
       </Container>
     </>
   );

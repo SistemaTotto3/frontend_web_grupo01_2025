@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 
-const TablaCliente = ({ clientes, cargando }) => {
+const TablaCliente = ({ clientes, cargando, abrirModalEdicion, abrirModalEliminacion }) => {
+
   const [orden, setOrden] = useState({ campo: "id_cliente", direccion: "asc" });
 
   const manejarOrden = (campo) => {
