@@ -22,6 +22,7 @@ const Productos = () => {
     precio_costo: "",
     precio_venta: "",
     existencia: "",
+    imagen: "",
   });
 
   // Estados para edición/eliminación/paginación
@@ -52,6 +53,7 @@ const Productos = () => {
         precio_costo: "",
         precio_venta: "",
         existencia: "",
+        imagen: "",
       });
 
       setMostrarModal(false);

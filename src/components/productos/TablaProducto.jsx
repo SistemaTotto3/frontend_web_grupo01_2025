@@ -75,6 +75,11 @@ const TablaProducto = ({
               Existencia
             </BotonOrden>
 
+            <BotonOrden campo="imagen" orden={orden} manejarOrden={manejarOrden}>
+              Imagen
+            </BotonOrden>
+
+
             <th>Acciones</th>
           </tr>
         </thead>
@@ -88,6 +93,19 @@ const TablaProducto = ({
                 <td>{prod.precio_costo}</td>
                 <td>{prod.precio_venta}</td>
                 <td>{prod.existencia}</td>
+                <td>
+                  {prod.imagen ? (
+                    <img
+                      src={`data:image/png;base64,${prod.imagen}`}
+                      alt={prod.nombre_producto}
+                      width={50}
+                      height={50}
+                      style={{ objectFit: "cover" }}
+                    />
+                  ) : (
+                    "Sin imagen"
+                  )}
+                </td>
                 <td>
                   <Button
                     variant="outline-warning"

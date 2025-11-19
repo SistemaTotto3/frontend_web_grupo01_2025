@@ -89,6 +89,38 @@ const ModalEdicionProducto = ({
               required
             />
           </Form.Group>
+          <Form.Group className="mb-3" controlId="formImagenProducto">
+            <Form.Label>Imagen</Form.Label>
+            {productoEditado?.imagen && (
+              <div>
+                <img
+                  src={`data:image/png;base64,${productoEditado.imagen}`}
+                  alt="Imagen actual"
+                  style={{ maxWidth: "100px", marginBottom: "10px" }}
+                />
+              </div>
+            )}
+            <Form.Control
+              type="file"
+              name="imagen"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    manejarCambio({
+                      target: {
+                        name: "imagen",
+                        value: reader.result.split(",")[1],
+                      },
+                    });
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+          </Form.Group>
         </Form>
       </Modal.Body>
 
