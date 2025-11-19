@@ -20,8 +20,18 @@ const Ordenes = () => {
   const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
   const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
 
-  const [ordenEditada, setOrdenEditada] = useState(null);
+  const [ordenAEditar, setOrdenAEditar] = useState(null);
   const [ordenAEliminar, setOrdenAEliminar] = useState(null);
+  const [ordenEnEdicion, setOrdenEnEdicion] = useState(null);
+
+  const [detallesOrdenes, setDetallesOrdenes] = useState([]);
+  const [mostrarModalDetalles, setMostrarModalDetalles] = useState(false);
+
+  const [detallesNuevos, setDetallesNuevos] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [mostrarModalRegistro, setMostrarModalRegistro] = useState(false);
+
+  const hoy = new Date().toISOString().split("T")[0];
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevaOrden, setNuevaOrden] = useState({
@@ -31,6 +41,11 @@ const Ordenes = () => {
 
   const [paginaActual, setPaginaActual] = useState(1);
   const elementosPorPagina = 5;
+
+  const indexInicial = (paginaActual - 1) * elementosPorPagina;
+const indexFinal = indexInicial + elementosPorPagina;
+
+const ordenesPaginados = ordenesFiltrados.slice(indexInicial, indexFinal);
 
   const generarPDFOrdenes = () => {
       const doc = new jsPDF();
@@ -105,8 +120,74 @@ const Ordenes = () => {
       doc.save(nombreArchivo);
     };
 
+    const obtenerNombreProducto = async (id_producto) => {
+    if (!id_producto) return "—";
+    try {
+      const resp = await fetch(
+        `http://localhost:3000/api/producto/${id_producto}`
+      );
+      if (!resp.ok) return "—";
+      const data = await resp.json();
+      return data.nombre_producto || "—";
+    } catch (error) {
+      console.error("Error al cargar nombre del producto:", error);
+      return "—";
+    }
+  };
+
+  const obtenerDetallesOrdenes = async (idOrden) => {
+  try {
+    const resp = await fetch(`http://localhost:3000/api/detalleorden/pororden/${idOrden}`);
+    
+    if (!resp.ok) throw new Error("Error al cargar detalles");
+
+    const datos = await resp.json();
+
+    // Traer nombre de producto
+    const detalles = await Promise.all(
+      datos.map(async (d) => ({
+        ...d,
+        nombre_producto: await obtenerNombreProducto(d.id_producto)
+      }))
+    );
+
+    setDetallesOrdenes(detalles);
+    setMostrarModalDetalles(true);
+
+  } catch (error) {
+    console.error(error);
+    alert("No se pudieron cargar los detalles.");
+  }
+};
+
+
+  const obtenerProductos = async () => {
+    try {
+      const resp = await fetch("http://localhost:3000/api/productos");
+      if (!resp.ok) throw new Error("Error al cargar productos");
+      const datos = await resp.json();
+      // Normalizar campos para consistencia
+      const productosNorm = datos.map((p) => ({
+        ...p,
+        id_producto: p.id_producto ?? p.id ?? null,
+        nombre_producto: p.nombre_producto ?? p.nombre ?? "",
+        stock: p.existencia ?? p.stock ?? 0,
+      }));
+      setProductos(productosNorm);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+
   const agregarOrden = async () => {
-    if (!nuevaOrden.id_venta.trim()) return;
+    if (!nuevaOrden.id_venta.trim()) return
+    
+    if (detallesNuevos.length === 0) {
+      alert("Agrega al menos un detalle.");
+      return;
+    };
 
     try {
       const respuesta = await fetch('http://localhost:3000/api/registrarorden', {
@@ -116,6 +197,16 @@ const Ordenes = () => {
       });
 
       if (!respuesta.ok) throw new Error('Error al guardar');
+
+      const { idOrden } = await respuesta.json();
+
+      for (const d of detallesNuevos) {
+        await fetch("http://localhost:3000/api/registrarDetalleOrden", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...d, idOrden }),
+        });
+      }
 
       // Limpiar y cerrar el modal
       setNuevaOrden({ id_venta: '', fecha_orden: '' });
@@ -152,33 +243,71 @@ const Ordenes = () => {
     }
   };
 
-  const abrirModalEdicion = (orden) => {
-    setOrdenEditada({ ...orden });
+  const abrirModalEdicion = async (orden) => {
+    setOrdenAEditar(orden);
+  
+
+  setOrdenEnEdicion({
+      fecha_orden: new Date(orden.fecha_orden).toISOString().split("T")[0],
+    });
+
+      const resp = await fetch("http://localhost:3000/api/DetallesOrdenes");
+      const todos = await resp.json();
+      const detallesRaw = todos.filter((d) => d.idOrden === orden.idOrden);
+
+      const detalles = await Promise.all(
+      detallesRaw.map(async (d) => ({
+        idOrden: d.idOrden,
+        id_producto:d.id_producto,
+        estado_orden: d.estado_orden,
+        cantidad: d.cantidad,
+      }))
+    );
+
+    setDetallesNuevos(detalles);
     setMostrarModalEdicion(true);
   };
 
-  const guardarEdicion = async () => {
-    if (!ordenEditada.id_venta.trim()) return;
-
+const actualizarOrden = async () => {
+    const total = detallesNuevos.reduce((acc, d) => acc + d.cantidad, 0
+    );
     try {
-      const respuesta = await fetch(
-        `http://localhost:3000/api/actualizarordenpatch/${ordenEditada.idOrden}`,
+      await fetch(
+        `http://localhost:3000/api/actualizarOrdenPatch/${ordenAEditar.idOrden}`,
         {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(ordenEditada),
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...ordenEnEdicion, total_cantidad: total } ),
         }
       );
 
-      if (!respuesta.ok) throw new Error('Error al actualizar');
+      const resp = await fetch("http://localhost:3000/api/DetallesOrdenes");
+      const todos = await resp.json();
+      const actuales = todos.filter(
+        (d) => d.idOrden === ordenAEditar.idOrden
+      );
+      for (const d of actuales) {
+        await fetch(
+          `http://localhost:3000/api/eliminarDetalleOrden/${d.id_detalle_orden}`,
+          { method: "DELETE" }
+        );
+      }
 
-      setMostrarModalEdicion(false);
+      for (const d of detallesNuevos) {
+        await fetch("http://localhost:3000/api/registrarDetalleOrden", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...d, idOrden: ordenAEditar.idOrden }),
+        });
+      }
+
       await obtenerOrdenes();
+      cerrarModalEdicion();
     } catch (error) {
-      console.error("Error al editar orden:", error);
-      alert("No se pudo actualizar la orden.");
+      alert("Error al actualizar.");
     }
   };
+
 
 
 const abrirModalEliminacion = (orden) => {
@@ -223,52 +352,93 @@ const abrirModalEliminacion = (orden) => {
     setOrdenesFiltrados(filtrados);
   };
 
+
+
+const cerrarModalRegistro = () => {
+    setMostrarModalRegistro(false);
+    setNuevaOrden({ fecha_orden: hoy, id_venta: ''});
+    setDetallesNuevos([]);
+  };
+
+  const cerrarModalEdicion = () => {
+    setMostrarModalEdicion(false);
+    setOrdenAEditar(null);
+    setOrdenEnEdicion(null);
+    setDetallesNuevos([]);
+  };
+
   useEffect(() => {
     obtenerOrdenes();
+    obtenerProductos();
   }, []);
+
+
   return (
     <>
       <Container className="mt-4">
-        <h4> Ordenes </h4>
-        <Row>
-          
-          <Col lg={5} md={6} sm={8} xs={12} className="mb-3">
-            <CuadroBusquedas
-              textoBusqueda={textoBusqueda}
-              manejarCambioBusqueda={manejarCambioBusqueda}
-            />
-          </Col>
-          <Col className="text-end">
-  <Button
-    className="btn btn-secondary"
-    onClick={() => setMostrarModal(true)}
-  >
-    + Nueva Orden
-  </Button>
-</Col>  
-        </Row>
+              <h4>Ordenes</h4>
+              <Row>
+                <Col lg={5} md={6} sm={8} xs={12}>
+                  <CuadroBusquedas
+                    textoBusqueda={textoBusqueda}
+                    manejarCambioBusqueda={manejarCambioBusqueda}
+                  />
+                </Col>
+                <Col className="text-end">
+                  <Button
+                    className="btn btn-secondary"
+                    onClick={() => setMostrarModalRegistro(true)}
+                  >
+                    + Nueva Orden
+                  </Button>
+                </Col>
+                <Col lg={3} md={4} sm={4} xs={5}>
+                  <Button
+                    className="mb-3"
+                    onClick={generarPDFOrdenes}
+                    variant="secondary"
+                    style={{ width: "100%" }}
+                  >
+                    Generar reporte PDF
+                  </Button>
+                </Col>
+              </Row>
 
         <TablaOrdenes
-          ordenes={ordenesFiltrados} 
+          ordenes={ordenesPaginados}
           cargando={cargando}
+          obtenerDetalles={obtenerDetallesOrdenes}
           abrirModalEdicion={abrirModalEdicion}
           abrirModalEliminacion={abrirModalEliminacion}
+          totalElementos={ordenesFiltrados.length}
+          elementosPorPagina={elementosPorPagina}
+          paginaActual={paginaActual}
+          establecerPaginaActual={setPaginaActual}
         />
 
         <ModalRegistroOrden
-          mostrarModal={mostrarModal}
-          setMostrarModal={setMostrarModal}
+           mostrar={mostrarModalRegistro}
+          setMostrar={cerrarModalRegistro}
           nuevaOrden={nuevaOrden}
-          manejarCambioInput={manejarCambioInput}
+          setNuevaOrden={setNuevaOrden}
+          detalles={detallesNuevos}
+          setDetalles={setDetallesNuevos}
+          productos={productos}
           agregarOrden={agregarOrden}
+          hoy={hoy}
+          
         />
 
         <ModalEdicionOrden
-          mostrar={mostrarModalEdicion}             
-          setMostrar={setMostrarModalEdicion}        
-          ordenEditada={ordenEditada}           
-          setOrdenEditada={setOrdenEditada}    
-          guardarEdicion={guardarEdicion}       
+          mostrar={mostrarModalEdicion}
+          setMostrar={cerrarModalEdicion}
+          orden={ordenAEditar}
+          ordenEnEdicion={ordenEnEdicion}
+          setOrdenEnEdicion={setOrdenEnEdicion}
+          detalles={detallesNuevos}
+          setDetalles={setDetallesNuevos}
+          productos={productos}
+          actualizarOrden={actualizarOrden}   
         />
 
         <ModalEliminacionOrden
@@ -278,7 +448,11 @@ const abrirModalEliminacion = (orden) => {
           confirmarEliminacion={confirmarEliminacion}
         />
 
-
+        <ModalDetalleOrden
+          mostrarModal={mostrarModalDetalles}
+          setMostrarModal={() => setMostrarModalDetalles(false)}
+          detalles={detallesOrdenes}
+        />
       </Container>
     </>
   );

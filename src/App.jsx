@@ -6,7 +6,7 @@ import Login from "./views/Login";
 import Inicio from "./views/Inicio";
 import Categorias from "./views/Categorias";
 import Productos from "./views/Productos";
-import Catalogo from "./views/Catalogo";
+import CatalogoProductos from "./views/CatalogoProductos";
 import Insumos from "./views/Insumos";
 import Clientes from "./views/Clientes";
 import Ordenes from "./views/Ordenes";
@@ -26,7 +26,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/categorias" element={<Categorias />} />
           <Route path="/productos" element={<Productos />} />
-          <Route path="/catalogo" element={<Catalogo />} />
+          <Route path="/CatalogoProductos" element={<CatalogoProductos />} />
           <Route path="/clientes" element={<Clientes />} /> 
           <Route path="/insumos" element={<Insumos />} /> 
           <Route path="/ordenes" element={<Ordenes />} />

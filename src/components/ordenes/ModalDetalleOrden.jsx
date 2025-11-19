@@ -18,14 +18,16 @@ const ModalDetalleOrden = ({ mostrarModal, setMostrarModal, detalles }) => {
           </thead>
           <tbody>
             {detalles.length === 0 ? (
-              <tr><td colSpan={4} className="text-center">No hay detalles</td></tr>
+              <tr>
+                <td colSpan={4} className="text-center">No hay detalles</td>
+              </tr>
             ) : (
               detalles.map((d) => (
                 <tr key={d.id_detalle_orden}>
                   <td>{d.idOrden}</td>
-                  <td>{d.id_producto}</td>
-                  <td>{estado_orden}</td>
-                  <td>{cantidad}</td>
+                  <td>{d.nombre_producto ?? d.id_producto}</td>
+                  <td>{d.estado_orden ?? "—"}</td>
+                  <td>{d.cantidad}</td>
                 </tr>
               ))
             )}
