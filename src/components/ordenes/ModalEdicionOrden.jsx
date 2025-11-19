@@ -3,13 +3,13 @@ import { Modal, Form, Button } from "react-bootstrap";
 const ModalEdicionOrden = ({
   mostrar,
   setMostrar,
-  ordenEditada,
-  setOrdenEditada,
-  guardarEdicion,
+  ordenEnEdicion,
+  setOrdenEnEdicion,
+  actualizarOrden,
 }) => {
   const manejarCambio = (e) => {
     const { name, value } = e.target;
-    setOrdenEditada((prev) => ({ ...prev, [name]: value }));
+    setOrdenEnEdicion((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -30,7 +30,7 @@ const ModalEdicionOrden = ({
             <Form.Control
               type="text"
               name="id_venta"
-              value={ordenEditada?.id_venta || ""}
+              value={ordenEnEdicion?.id_venta || ""}
               onChange={manejarCambio}
               placeholder="1, 2, 3 ..."
               maxLength={4}
@@ -45,7 +45,7 @@ const ModalEdicionOrden = ({
               as="textarea"
               rows={3}
               name="fecha_orden"
-              value={ordenEditada?.fecha_orden || ""}
+              value={ordenEnEdicion?.fecha_orden || ""}
               onChange={manejarCambio}
               placeholder="2025-10-10"
               maxLength={50}
@@ -60,8 +60,8 @@ const ModalEdicionOrden = ({
         </Button>
         <Button
           variant="primary"
-          onClick={guardarEdicion}
-          disabled={!ordenEditada?.id_venta?.trim()}
+          onClick={actualizarOrden}
+          disabled={!String(ordenEnEdicion?.id_venta ?? "").trim()}
         >
           Guardar Cambios
         </Button>

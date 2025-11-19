@@ -248,6 +248,7 @@ const ordenesPaginados = ordenesFiltrados.slice(indexInicial, indexFinal);
   
 
   setOrdenEnEdicion({
+      id_venta: orden.id_venta ?? orden.idVenta ?? "",
       fecha_orden: new Date(orden.fecha_orden).toISOString().split("T")[0],
     });
 
@@ -269,42 +270,58 @@ const ordenesPaginados = ordenesFiltrados.slice(indexInicial, indexFinal);
   };
 
 const actualizarOrden = async () => {
-    const total = detallesNuevos.reduce((acc, d) => acc + d.cantidad, 0
-    );
+    const total = detallesNuevos.reduce((acc, d) => acc + Number(d.cantidad || 0), 0);
     try {
-      await fetch(
-        `http://localhost:3000/api/actualizarOrdenPatch/${ordenAEditar.idOrden}`,
+      const patchBody = {
+        id_venta: ordenEnEdicion?.id_venta,
+        fecha_orden: ordenEnEdicion?.fecha_orden,
+      };
+
+      const patchResp = await fetch(
+        `http://localhost:3000/api/actualizarOrden/${ordenAEditar?.idOrden}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...ordenEnEdicion, total_cantidad: total } ),
+          body: JSON.stringify(patchBody),
         }
       );
 
+      if (!patchResp.ok) {
+        const text = await patchResp.text().catch(() => "");
+        console.error("PATCH failed:", patchResp.status, text);
+        alert("Error al actualizar la orden: " + patchResp.status);
+        return;
+      }
+
+      const patchResult = await patchResp.json().catch(() => null);
+      console.log("PATCH result:", patchResult);
+
       const resp = await fetch("http://localhost:3000/api/DetallesOrdenes");
+      if (!resp.ok) throw new Error("Error al obtener DetallesOrdenes");
       const todos = await resp.json();
-      const actuales = todos.filter(
-        (d) => d.idOrden === ordenAEditar.idOrden
-      );
+      const actuales = todos.filter((d) => d.idOrden === ordenAEditar.idOrden);
       for (const d of actuales) {
-        await fetch(
+        const del = await fetch(
           `http://localhost:3000/api/eliminarDetalleOrden/${d.id_detalle_orden}`,
           { method: "DELETE" }
         );
+        if (!del.ok) console.warn("No se pudo eliminar detalle", d, del.status);
       }
 
       for (const d of detallesNuevos) {
-        await fetch("http://localhost:3000/api/registrarDetalleOrden", {
+        const reg = await fetch("http://localhost:3000/api/registrarDetalleOrden", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...d, idOrden: ordenAEditar.idOrden }),
         });
+        if (!reg.ok) console.warn("No se pudo registrar detalle", d, await reg.text().catch(()=>""));
       }
 
       await obtenerOrdenes();
       cerrarModalEdicion();
     } catch (error) {
-      alert("Error al actualizar.");
++      console.error("Error actualizarOrden:", error);
+      alert("Error al actualizar. Revisa la consola.");
     }
   };
 
